@@ -23,11 +23,9 @@ import { Button } from "@/components/ui/button";
 import {
   Form,
   FormControl,
-  FormDescription,
   FormField,
   FormItem,
   FormLabel,
-  FormMessage,
 } from "@/components/ui/form";
 
 import { Input } from "@/components/ui/input";
@@ -35,7 +33,7 @@ import { Input } from "@/components/ui/input";
 import { useToast } from "@/components/ui/use-toast";
 
 import { Textarea } from "@/components/ui/textarea";
-import { PiCheckLight, PiSmiley } from "react-icons/pi";
+import { PiSmiley } from "react-icons/pi";
 import Navbar from "@/components/navbar";
 
 const FormSchema = z.object({
@@ -60,29 +58,14 @@ const FormSchema = z.object({
   info: z.string(),
 });
 
-type FormValues = {
-  first_name: string;
-  last_name: string;
-  email: string;
-  job_title: string;
-  company_name: string;
-  help: "Evaluate Bird for my company" | "Learn More" | "Get a Quote" | "Other";
-  services:
-    | "Mobile App Development"
-    | "Social Media Marketing"
-    | "UI/UX Design"
-    | "Branding"
-    | "Website Development";
-  info: string;
-  terms: boolean;
-};
+// Type is now inferred from Zod schema for perfect alignment
 
 export default function ContactForm() {
   const [loading, setLoading] = useState(false);
   const [submitted, setSubmitted] = useState(false);
   const { toast } = useToast();
 
-  const form = useForm<FormValues>({
+  const form = useForm<z.infer<typeof FormSchema>>({
     resolver: zodResolver(FormSchema),
     defaultValues: {
       first_name: "",
@@ -110,7 +93,7 @@ export default function ContactForm() {
       }
 
       setSubmitted(true);
-    } catch (error) {
+    } catch {
       toast({
         title: "Error",
         description: "Something went wrong",
@@ -127,7 +110,6 @@ export default function ContactForm() {
         scrollToGraphicDesign={() => {}}
         scrollToShopifyStores={() => {}}
         scrollToBrands={() => {}}
-        scrollToServices={() => {}}
       />
       <div className="md:grid md:grid-cols-1 xl:flex items-start justify-center md:py-20 px-6 mb-20">
         <div className="">
